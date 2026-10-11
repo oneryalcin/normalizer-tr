@@ -21,7 +21,7 @@ fn fallback_readings_are_source_faithful_and_diagnostic() {
         ("IV", "ı ve"),
         ("Toplam 25.", "Toplam yirmi beş."),
         ("10-15", "on tire on beş"),
-        ("1/2", "bir eğik çizgi iki"),
+        ("1/2/3", "bir eğik çizgi iki eğik çizgi üç"),
         ("12:30", "on iki otuz"),
         ("40.03.2026", "kırk Mart iki bin yirmi altı"),
         (

@@ -13,9 +13,13 @@ use super::{
     temporal,
 };
 use crate::{
-    FallbackClass, HintKind, IssueCategory, NormalizeError, WorkControl,
+    FallbackClass, HintKind, IssueCategory, NormalizeError, SegmentKind, SourceRange, WorkControl,
     domain::{
-        electronic::Electronic, identifiers::Telephone, numeric::Numeric, quantities::NumericRange,
+        composite::{Component, ComponentValue, Composite},
+        electronic::Electronic,
+        identifiers::Telephone,
+        numeric::Numeric,
+        quantities::NumericRange,
     },
     interpretation::UnresolvedFinding,
     interpretation::Value,
@@ -233,12 +237,58 @@ fn token(ctx: &Context<'_>, index: usize) -> Option<super::Reading> {
                     token.text, class, failure,
                 )),
             })
+            .or_else(|| division(token))
             .or_else(|| Some(automatic_number(token.text)));
     }
     if token.text.starts_with('%') || token.text.chars().any(char::is_numeric) {
         return Some(automatic_number(token.text));
     }
     None
+}
+
+/// Reads one compact `N/D` as written, like the address reading: it is not evaluated,
+/// reduced or reordered into a fraction. Leading zeroes stay with date-shaped notation.
+fn division(token: Token<'_>) -> Option<super::Reading> {
+    let (dividend, divisor) = token.text.split_once('/')?;
+    let plain = |digits: &str| {
+        !digits.is_empty()
+            && digits.len() <= 15
+            && digits.bytes().all(|byte| byte.is_ascii_digit())
+            && (digits == "0" || !digits.starts_with('0'))
+    };
+    let (base, _) = numbers::split_suffix(divisor)?;
+    if !plain(dividend) || !plain(base) {
+        return None;
+    }
+    let divisor = Numeric::parse(divisor, false).filter(|number| number.is_count())?;
+    if divisor.kind() != SegmentKind::Cardinal {
+        return None;
+    }
+    let start = token.range.start;
+    let slash = start + dividend.len();
+    let component = |from, to, value| Component {
+        range: SourceRange::new(from, to),
+        value,
+    };
+    Some(super::Reading::Resolved(Value::Composite(Composite {
+        components: vec![
+            component(
+                start,
+                slash,
+                ComponentValue::Numeric(Numeric::parse(dividend, false)?),
+            ),
+            component(
+                slash,
+                slash + 1,
+                ComponentValue::Text {
+                    kind: SegmentKind::Symbol,
+                    rule_id: "expression.division",
+                    text: " bölü ".to_owned(),
+                },
+            ),
+            component(slash + 1, token.range.end, ComponentValue::Numeric(divisor)),
+        ],
+    })))
 }
 
 fn automatic_number(source: &str) -> super::Reading {

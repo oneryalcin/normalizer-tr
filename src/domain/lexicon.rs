@@ -90,6 +90,15 @@ const UNITS: &[(&str, Lexeme)] = &[
             Word::new("Santigrat", BackFlat, Voiceless),
         ),
     ),
+    (
+        "°F",
+        Lexeme::distinct(
+            "derece Fahrenhayt",
+            Word::new("Fahrenhayt", BackFlat, Voiceless),
+            Word::new("Fahrenhayt", BackFlat, Voiceless),
+        ),
+    ),
+    ("°", Lexeme::same("derece", FrontFlat, Vowel)),
     ("V", Lexeme::same("volt", BackRound, Voiceless)),
     ("kW", Lexeme::same("kilovat", BackFlat, Voiceless)),
     (

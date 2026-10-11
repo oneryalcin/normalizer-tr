@@ -7,6 +7,18 @@ Platform requirements are in the [README](README.md) and
 
 ## Unreleased
 
+- Read a bare degree sign after a number as the unit `derece`: `90°` ->
+  `doksan derece`, `30°'dir` -> `otuz derecedir`. These were unresolved and
+  Fallback read `derece işareti`. `°C` is unchanged, other degree labels
+  stay unresolved, and a degree sign without a number is not a unit.
+- Add the unit label `°F`, read `derece Fahrenhayt`: `68 °F` ->
+  `altmış sekiz derece Fahrenhayt`. It was a recognized unsupported label.
+- Read one compact `N/D` of plain nonnegative integers as `N bölü D` in every
+  policy: `3/4` -> `üç bölü dört`, `3/4'ü` -> `üç bölü dördü`. This is an
+  intentional reading change: these were unresolved, and Fallback read
+  `üç eğik çizgi dört`. Leading zeroes, signs, decimals, labels, spaced slashes
+  and longer chains are unchanged, as are date and address slash rules.
+
 ## 0.7.0 - 2026-10-11
 
 - Add bounded plural, six-person possession, case, locative-plus-ki and copular

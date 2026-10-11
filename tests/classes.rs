@@ -182,3 +182,38 @@ fn hinted_and_cued_temporal_values() {
         assert!(result.complete());
     }
 }
+
+#[test]
+fn bare_degree_sign_is_a_unit_only_after_a_number() {
+    for (input, expected) in [
+        ("90°", "doksan derece"),
+        ("90 °", "doksan derece"),
+        ("45° açı", "kırk beş derece açı"),
+        ("-5°", "eksi beş derece"),
+        ("37,5°", "otuz yedi virgül beş derece"),
+        ("açı 30°'dir", "açı otuz derecedir"),
+        ("360°'ye", "üç yüz altmış dereceye"),
+        ("20°C", "yirmi derece Santigrat"),
+        ("68 °F", "altmış sekiz derece Fahrenhayt"),
+        ("-4°F", "eksi dört derece Fahrenhayt"),
+        (
+            "98,6 °F'tır",
+            "doksan sekiz virgül altı derece Fahrenhayttır",
+        ),
+        ("sıcaklık ° ile", "sıcaklık ° ile"),
+    ] {
+        assert_eq!(normalized(input), expected, "{input}");
+    }
+}
+
+#[test]
+fn degree_sign_does_not_admit_unsupported_labels() {
+    let normalizer = Normalizer::new().unwrap();
+    for input in ["20°K", "20 °f", "5°x", "41°N"] {
+        let result = normalizer
+            .normalize(input, &NormalizeOptions::default())
+            .unwrap();
+        assert!(!result.complete(), "{input}");
+        assert_eq!(result.normalized_text(), input);
+    }
+}
