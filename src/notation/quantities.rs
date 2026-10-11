@@ -62,7 +62,6 @@ pub(crate) fn unsupported_label(text: &str) -> bool {
             | "kHz"
             | "MHz"
             | "GHz"
-            | "°F"
             | "mph"
             | "MB"
             | "A"

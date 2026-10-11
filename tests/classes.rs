@@ -194,6 +194,12 @@ fn bare_degree_sign_is_a_unit_only_after_a_number() {
         ("açı 30°'dir", "açı otuz derecedir"),
         ("360°'ye", "üç yüz altmış dereceye"),
         ("20°C", "yirmi derece Santigrat"),
+        ("68 °F", "altmış sekiz derece Fahrenhayt"),
+        ("-4°F", "eksi dört derece Fahrenhayt"),
+        (
+            "98,6 °F'tır",
+            "doksan sekiz virgül altı derece Fahrenhayttır",
+        ),
         ("sıcaklık ° ile", "sıcaklık ° ile"),
     ] {
         assert_eq!(normalized(input), expected, "{input}");
@@ -203,7 +209,7 @@ fn bare_degree_sign_is_a_unit_only_after_a_number() {
 #[test]
 fn degree_sign_does_not_admit_unsupported_labels() {
     let normalizer = Normalizer::new().unwrap();
-    for input in ["20 °F", "20°F", "5°x", "41°N"] {
+    for input in ["20°K", "20 °f", "5°x", "41°N"] {
         let result = normalizer
             .normalize(input, &NormalizeOptions::default())
             .unwrap();

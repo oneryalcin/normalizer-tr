@@ -9,8 +9,10 @@ Platform requirements are in the [README](README.md) and
 
 - Read a bare degree sign after a number as the unit `derece`: `90°` ->
   `doksan derece`, `30°'dir` -> `otuz derecedir`. These were unresolved and
-  Fallback read `derece işareti`. `°C` is unchanged, `°F` and other degree
-  labels stay unresolved, and a degree sign without a number is not a unit.
+  Fallback read `derece işareti`. `°C` is unchanged, other degree labels
+  stay unresolved, and a degree sign without a number is not a unit.
+- Add the unit label `°F`, read `derece Fahrenhayt`: `68 °F` ->
+  `altmış sekiz derece Fahrenhayt`. It was a recognized unsupported label.
 
 ## 0.7.0 - 2026-10-11
 
