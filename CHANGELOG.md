@@ -7,6 +7,11 @@ Platform requirements are in the [README](README.md) and
 
 ## Unreleased
 
+- Read a bare degree sign after a number as the unit `derece`: `90°` ->
+  `doksan derece`, `30°'dir` -> `otuz derecedir`. These were unresolved and
+  Fallback read `derece işareti`. `°C` is unchanged, `°F` and other degree
+  labels stay unresolved, and a degree sign without a number is not a unit.
+
 ## 0.7.0 - 2026-10-11
 
 - Add bounded plural, six-person possession, case, locative-plus-ki and copular

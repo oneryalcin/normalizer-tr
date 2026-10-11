@@ -74,7 +74,7 @@ No global whitespace rewriting is performed.
 
 Approved unit labels are exactly `kg`, `g`, `km`, `m`, `cm`, `mm`, `L`, `mL`,
 `mg`, `µg`, `μg`, `gr`, `ml`, `lt`, `dk`, `sn`, `sa`, `m²`, `cm²`, `km²`, `m³`,
-`°C`, `V`, `kW`, `kWh` and `GB`.
+`°C`, `°`, `V`, `kW`, `kWh` and `GB`.
 Aliases are explicit: there is no arbitrary case-folding or NFKC expansion.
 Rates are only `km/sa`, `km/h` and `m/s`. They use written unit order:
 `5 km/sa` -> `beş kilometre saat`, `5 m/s` -> `beş metre saniye`.
@@ -86,6 +86,7 @@ Number/label adjacency is supported: `5kg` -> `beş kilogram`.
 | Label | Reading in numeric quantity context |
 |---|---|
 | `°C` | `derece Santigrat` |
+| `°` | `derece` |
 | `V` | `volt` |
 | `kW` | `kilovat` |
 | `kWh` | `kilovat saat` |

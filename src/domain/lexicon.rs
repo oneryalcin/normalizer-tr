@@ -90,6 +90,7 @@ const UNITS: &[(&str, Lexeme)] = &[
             Word::new("Santigrat", BackFlat, Voiceless),
         ),
     ),
+    ("°", Lexeme::same("derece", FrontFlat, Vowel)),
     ("V", Lexeme::same("volt", BackRound, Voiceless)),
     ("kW", Lexeme::same("kilovat", BackFlat, Voiceless)),
     (
