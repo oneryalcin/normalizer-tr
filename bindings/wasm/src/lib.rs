@@ -249,9 +249,15 @@ fn options(value: &JsValue) -> Result<NormalizeOptions, JsValue> {
     let hints = if hints.is_undefined() {
         Vec::new()
     } else if Array::is_array(&hints) {
-        Array::from(&hints)
-            .iter()
-            .map(hint)
+        // Every read goes through fallible `Reflect::get`: a getter or proxy that throws must
+        // surface as an error, not unwind through the wasm frame. The count is bounded before
+        // any element is read.
+        let length = field(&hints, "length")?.as_f64().unwrap_or(0.0);
+        if length > normalizer_tr::MAX_HINTS as f64 {
+            return Err(error(NormalizeError::LimitExceeded(LimitKind::Hints)));
+        }
+        (0..length as u32)
+            .map(|index| Reflect::get_u32(&hints, index).and_then(hint))
             .collect::<Result<_, _>>()?
     } else {
         return Err(type_error("hints must be an array of Hint"));

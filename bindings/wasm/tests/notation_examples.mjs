@@ -21,4 +21,26 @@ const [segment] = normalizer.normalize("25 TL").segments;
 assert.deepEqual(segment, { startByte: 0, endByte: 5, kind: "money", text: "yirmi beş Türk lirası", ruleId: "quantity" });
 assert.throws(() => normalizer.normalize("x".repeat(40_000)), { name: "NormalizationError", code: "limit_exceeded", limitKind: "input" });
 assert.throws(() => normalizer.normalize(1), TypeError);
+
+// Hints: the valid path, then hostile arrays that must fail cleanly and leave the instance usable.
+const date = { startByte: 0, endByte: 10, kind: "date" };
+assert.equal(normalizer.normalize("03/04/2026", { hints: [date] }).normalizedText, "üç Nisan iki bin yirmi altı");
+const boom = () => { throw new RangeError("boom"); };
+const throwing = [
+  { get hints() { return boom(); } },
+  { hints: Object.defineProperty([date], 0, { get: boom }) },
+  { hints: [{ get kind() { return boom(); } }] },
+  { hints: new Proxy([date], { get: boom }) },
+];
+for (let round = 0; round < 2000; round++) {
+  for (const options of throwing) assert.throws(() => normalizer.normalize("03/04/2026", options), RangeError);
+}
+let reads = 0;
+const oversized = new Proxy(new Array(10_000).fill(date), {
+  get: (target, key) => (key === "length" ? target.length : (reads++, target[key])),
+});
+assert.throws(() => normalizer.normalize("03/04/2026", { hints: oversized }), { code: "limit_exceeded", limitKind: "hints" });
+assert.equal(reads, 0, "oversized hints are rejected before any element is read");
+assert.equal(normalizer.normalize("5 kg").normalizedText, "beş kilogram");
+normalizer.free();
 console.log(`ok: ${cases.length} notation examples in 3 policies`);
