@@ -7,6 +7,12 @@ Platform requirements are in the [README](README.md) and
 
 ## Unreleased
 
+- Read one compact `N/D` of plain nonnegative integers as `N bölü D` in every
+  policy: `3/4` -> `üç bölü dört`, `3/4'ü` -> `üç bölü dördü`. This is an
+  intentional reading change: these were unresolved, and Fallback read
+  `üç eğik çizgi dört`. Leading zeroes, signs, decimals, labels, spaced slashes
+  and longer chains are unchanged, as are date and address slash rules.
+
 ## 0.7.0 - 2026-10-11
 
 - Add bounded plural, six-person possession, case, locative-plus-ki and copular

@@ -144,6 +144,15 @@ yirmi beş kuruş`. Letter `x` requires surrounding whitespace; explicit
 symbols accept compact/spaced forms. Validated multiplication establishes
 grouping intent for `1.234 x 2`, without changing bare grouped numbers.
 
+One compact `N/D` of plain nonnegative integers is read as written with
+`bölü`, like the address reading, and is not evaluated or reordered into a
+fraction: `3/4` -> `üç bölü dört`, `24/7` -> `yirmi dört bölü yedi`. A suffix
+belongs to the divisor: `3/4'ü` -> `üç bölü dördü`; a suffix the divisor cannot
+take (`2/3'si`) leaves the whole expression unresolved. Leading zeroes
+(`03/04`), signs, decimals, grouping, labels (`3/4 kg`), spaced slashes and
+longer chains (`1/2/3`) are not division readings. Dates, addresses and
+electronic addresses keep their own slash rules.
+
 Numeric-only chains use exact numbers. A count-quantity chain contains one
 approved money, measurement or rate operand and otherwise nonnegative integer
 counts. Grouping and labels belong to their whole operand. Parentheses, equations,
